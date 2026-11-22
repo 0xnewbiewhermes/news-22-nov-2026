@@ -7,6 +7,7 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
+import { createHash } from 'node:crypto';
 import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -31,3 +32,8 @@ if (isPng) {
 
 mkdirSync(OUTPUT_DIR, { recursive: true });
 copyFileSync(new URL('./entry.png', import.meta.url), join(OUTPUT_DIR, 'entry.png'));
+
+// Two runs must land the same bytes: print the digest so a second run can be compared against this one.
+const digest = createHash('sha256').update(readFileSync(join(OUTPUT_DIR, 'entry.png'))).digest('hex');
+process.stdout.write(`wrote ${join(OUTPUT_DIR, 'entry.png')} sha256 ${digest}
+`);
