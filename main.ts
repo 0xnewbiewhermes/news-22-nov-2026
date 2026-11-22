@@ -18,6 +18,7 @@ const LIMIT_SIDE = 1024;
 const image = readFileSync(new URL('./entry.png', import.meta.url));
 
 // The gate: a whole PNG or JPEG, at most 1 MiB, at most 1024 by 1024.
+// A whole image means every chunk with its checksum, so the copy is byte for byte the file committed beside it.
 const isPng = image.length > 8 && image[0] === 0x89 && image[1] === 0x50 && image[2] === 0x4e && image[3] === 0x47;
 const isJpeg = image.length > 3 && image[0] === 0xff && image[1] === 0xd8 && image[2] === 0xff;
 if (!isPng && !isJpeg) throw new Error('entry.png is neither a PNG nor a JPEG by its first bytes');
